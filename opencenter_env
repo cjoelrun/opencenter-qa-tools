@@ -1,0 +1,24 @@
+#!/usr/bin/env python
+from chef import autoconfigure
+from opencenter_helper import opencenter_endpoint
+from argparse import ArgumentParser
+from subprocess import call
+import os
+
+parser = ArgumentParser()
+parser.add_argument('--name', action="store", dest="name",
+                    required=False, default=os.getenv('CHEF_USER', default="test"),
+                    help="Name for the opencenter chef environment")
+parser.add_argument('--os', action="store", dest="os", required=False,
+                    default='ubuntu',
+                    help="Operating System to use for opencenter")
+args = parser.parse_args()
+
+chef = autoconfigure()
+ep = opencenter_endpoint(chef, args.name, args.os)
+url = ep.endpoint
+if '8443' in url:
+   url = url[:8] + 'admin:password@' + url[8:]
+os.putenv('OPENCENTER_ENDPOINT', url)
+print "Endpoint set to: %s\nTry: opencentercli node list" % url
+os.system(os.environ['SHELL'])

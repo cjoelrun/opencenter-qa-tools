@@ -1,0 +1,21 @@
+#!/usr/bin/env python
+import webbrowser
+from chef import autoconfigure
+from opencenter_helper import opencenter_endpoint, openstack_endpoints
+from argparse import ArgumentParser
+import os
+
+parser = ArgumentParser()
+parser.add_argument('--name', action="store", dest="name",
+                    required=False, default=os.getenv('CHEF_USER', default='test'),
+                    help="Name for the opencenter chef environment")
+parser.add_argument('--os', action="store", dest="os", required=False,
+                    default='ubuntu',
+                    help="Operating System to use for opencenter")
+args = parser.parse_args()
+
+chef = autoconfigure()
+ep = opencenter_endpoint(chef, args.name, args.os)
+ip = openstack_endpoints(ep)
+url = "https://%s" % ip
+webbrowser.open_new_tab(url)

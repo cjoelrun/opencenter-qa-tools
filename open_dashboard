@@ -1,0 +1,18 @@
+#!/usr/bin/env python
+import webbrowser
+from chef import autoconfigure
+from opencenter_helper import opencenter_dashboard
+from argparse import ArgumentParser
+
+parser = ArgumentParser()
+parser.add_argument('--name', action="store", dest="name",
+                    required=False, default=os.genenv("CHEF_USER", default='test'),
+                    help="Name for the opencenter chef environment")
+parser.add_argument('--os', action="store", dest="os", required=False,
+                    default='ubuntu',
+                    help="Operating System to use for opencenter")
+args = parser.parse_args()
+
+chef = autoconfigure()
+url = opencenter_dashboard(chef, args.name, args.os)
+webbrowser.open_new_tab(url)
