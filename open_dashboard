@@ -3,10 +3,11 @@ import webbrowser
 from chef import autoconfigure
 from opencenter_helper import opencenter_dashboard
 from argparse import ArgumentParser
+import os
 
 parser = ArgumentParser()
 parser.add_argument('--name', action="store", dest="name",
-                    required=False, default=os.genenv("CHEF_USER", default='test'),
+                    required=False, default=os.getenv("CHEF_USER", default='test'),
                     help="Name for the opencenter chef environment")
 parser.add_argument('--os', action="store", dest="os", required=False,
                     default='ubuntu',
